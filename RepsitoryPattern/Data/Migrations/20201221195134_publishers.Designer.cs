@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RepsitoryPattern.Data;
 
 namespace RepsitoryPattern.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201221195134_publishers")]
+    partial class publishers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -252,14 +254,9 @@ namespace RepsitoryPattern.Data.Migrations
                     b.Property<string>("Category")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PublisherId")
-                        .HasColumnType("int");
-
                     b.HasKey("BookId");
 
                     b.HasIndex("AuthorId");
-
-                    b.HasIndex("PublisherId");
 
                     b.ToTable("books");
                 });
@@ -338,12 +335,6 @@ namespace RepsitoryPattern.Data.Migrations
                     b.HasOne("RepsitoryPattern.Data.Author", "author")
                         .WithMany()
                         .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RepsitoryPattern.Data.Publisher", "Publisher")
-                        .WithMany()
-                        .HasForeignKey("PublisherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

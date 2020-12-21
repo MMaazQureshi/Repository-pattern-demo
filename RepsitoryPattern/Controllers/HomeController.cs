@@ -12,46 +12,61 @@ namespace RepsitoryPattern.Controllers
 {
     public class HomeController : Controller
     {
-        public IBookRepository BookRepository;
+        public IBookRepository _bookRepository;
 
-        public IAuthorRepository AuthorRepository;
+        public IAuthorRepository _authorRepository;
+        public IPublisherRepository _publisherRepository;
 
         public UnitOfWork UnitOfWork;
 
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger,IBookRepository bookRepository,IAuthorRepository authorRepository,UnitOfWork unitOfWork)
+        public HomeController(ILogger<HomeController> logger,IBookRepository bookRepository,IAuthorRepository authorRepository,UnitOfWork unitOfWork, IPublisherRepository publisherRepository)
         {
-            BookRepository = bookRepository;
-            AuthorRepository = authorRepository;
+            _bookRepository = bookRepository;
+            _authorRepository = authorRepository;
            UnitOfWork = unitOfWork;
+            _publisherRepository = publisherRepository;
             _logger = logger;
         }
 
         public IActionResult Index()
         {
-           var books = BookRepository.Get();
+            var books = from book in _bookRepository.Get() join authors in _authorRepository.Get() 
+                        
+                        on book.AuthorId equals authors.AuthorId
+                        join publishers in _publisherRepository.Get() on book.PublisherId equals publishers.Id select book ;
+
+            foreach (var item in books)
+            {
+                BookViewModel model = new BookViewModel()
+                {
+                    BookName = item.BookName,
+                    AuthorName = item.author.AuthorName,
+                    Category = item.Category,
+                };
+            }
+            
             return View(books);
         }
 
         public IActionResult AddBook([FromBody] BookViewModel book)
 
         {
-            for (int i = 0; i < 10; i++)
-            {
+            
                 var author = new Author()
                 {
                     AuthorName = book.AuthorName
                 };
-                AuthorRepository.Create(author);
+                _authorRepository.Create(author);
                 Book book1 = new Book
                 {
                     AuthorId = author.AuthorId,
                     BookName = book.BookName,
                     Category = book.Category
                 };
-                BookRepository.Create(book1);
-            }
+                _bookRepository.Create(book1);
+            
             
             UnitOfWork.Save();
 

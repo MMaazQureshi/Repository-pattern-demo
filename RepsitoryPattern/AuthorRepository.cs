@@ -21,12 +21,13 @@ namespace RepsitoryPattern
 
         public IEnumerable<Author> Get(Func<Author, bool> condition)
         {
-            throw new NotImplementedException();
+            return Context.authors.Where(condition);
+
         }
 
         public IEnumerable<Author> Get()
         {
-            throw new NotImplementedException();
+            return Context.authors;
         }
 
         public Author GetById(int id)

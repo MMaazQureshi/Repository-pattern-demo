@@ -35,6 +35,7 @@ namespace RepsitoryPattern
             services.AddControllersWithViews();
             services.AddScoped<IBookRepository, BookRepository>();
             services.AddScoped<IAuthorRepository, AuthorRepository>();
+            services.AddScoped<IPublisherRepository, PublisherRepository>();
             services.AddScoped<UnitOfWork>();
             services.AddScoped<ApplicationDbContext>();
             services.AddRazorPages();

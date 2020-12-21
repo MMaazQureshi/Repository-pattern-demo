@@ -14,6 +14,7 @@ namespace RepsitoryPattern.Data
         }
         public DbSet<Book> books { get; set; }
         public DbSet<Author> authors{ get; set; }
+        public DbSet<Publisher> Publishers{ get; set; }
 
     }
 }
